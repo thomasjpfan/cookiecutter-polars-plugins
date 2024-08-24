@@ -26,17 +26,18 @@ jobs:
         run: |
           uv venv -p python3.12
           . .venv/bin/activate
+          # adds venv into path for future steps
+          echo "$PATH" >> $GITHUB_PATH
+
           uv pip install -U polars maturin mypy pytest pip
           make install
         working-directory: my_plugin
       - name: Run linting and tests
         run: |
-          . .venv/bin/activate
           mypy my_plugin tests
           pytest
         working-directory: my_plugin
       - name: Check version
         run: |
-          . .venv/bin/activate
           python -c 'import my_plugin; print(my_plugin.__version__)'
         working-directory: my_plugin
